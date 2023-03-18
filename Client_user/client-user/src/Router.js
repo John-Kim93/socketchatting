@@ -6,8 +6,9 @@ import {
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './global.css';
 import { ColorModeProvider } from "@chakra-ui/react"
-import Home from "./pages/Home"
 import NotFound from "./NotFound"
+import Home from "./pages/Home"
+import Talk from "./pages/Talk"
 
 export default function Router() {
   const [queryClient] = React.useState(() => new QueryClient({
@@ -25,6 +26,7 @@ export default function Router() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/talk" element={<Talk />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
