@@ -1,0 +1,14 @@
+[tool.pdm]
+
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "", email = ""},
+]
+dependencies = [
+    "websockets>=10.4",
+]
+requires-python = ">=3.10"
+license = {text = "MIT"}

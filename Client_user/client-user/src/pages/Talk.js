@@ -5,17 +5,20 @@ export default function Talk() {
   const [sendCount, setsendCount] = useState(0)
   const [typingText, setTypingText] = useState("")
   const [printedText, setPrintedText] = useState([])
-  
+
   const wsRef = useRef(null);
   useEffect(() => {
     wsRef.current = new WebSocket("ws://localhost:8100")
 
     wsRef.current.onopen = () => {
+      wsRef.current.send(user)
       console.log("web socket 연결!!!")
     };
 
-    wsRef.current.onmessage = (event) => {
-      setPrintedText(prevPrintedText => [...prevPrintedText, event.data])
+    wsRef.current.onmessage = ({ data }) => {
+      const msg = JSON.parse(data)
+      setPrintedText(prevPrintedText =>
+        [...prevPrintedText, `${msg.nickname}: ${msg.chat}`])
     };
 
     return () => {
@@ -29,18 +32,18 @@ export default function Talk() {
   const sendMessage = () => {
     if (typingText) {
       setsendCount(sendCount + 1)
-      setPrintedText([...printedText, `${user} : ${typingText}`])
+      //setPrintedText([...printedText, `${user} : ${typingText}`])
       setTypingText("")
       wsRef.current.send(typingText)
     }
   }
-  
-  return(
+
+  return (
     <div className="container">
       <textarea
         name="typingText"
         value={typingText}
-        onChange={(e) => {setTypingText(e.target.value)}}
+        onChange={(e) => { setTypingText(e.target.value) }}
       />
       <button onClick={sendMessage}>보내기</button>
       <p>보낸 메시지 횟수 : {sendCount}번</p>
