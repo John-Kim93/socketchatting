@@ -70,7 +70,7 @@
      - roomID : number(int)
      - message : "{userName}님이 참여하였습니다."
 
-	4. 방 퇴장
+4. 방 퇴장
 
     - send
 
@@ -86,7 +86,7 @@
       - roomID : number(int)
       - message : "{userName}님이 참여하였습니다."
 
-	5. 채팅 입력
+5. 채팅 입력
 
     - send
 
