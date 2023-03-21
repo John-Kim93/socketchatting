@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import "./Home.css"
+import style from "./Home.module.css"
 
 export default function Home() {
   let navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function Home() {
   
   return(
     <>
-      <div className="container"> 
+      <div className={style.container}> 
         <input
           name="userName"
           value={userName}
@@ -27,6 +27,7 @@ export default function Home() {
             setWarning(false)
           }}
           placeholder="이름을 입력하세요."
+          maxLength={10}
         />
         <button onClick={enterName}>Enter</button>
         {waring && <p>이름을 입력하세요!</p>}
