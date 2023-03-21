@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react"
-import "./Talk.css"
+import style from "./Talk.module.css"
 
 export default function Talk() {
   const [sendCount, setsendCount] = useState(0)
   const [typingText, setTypingText] = useState("")
   const [printedText, setPrintedText] = useState([])
 
+  const user = sessionStorage.getItem("userName")
   const wsRef = useRef(null);
+
   useEffect(() => {
     wsRef.current = new WebSocket("ws://localhost:8100")
 
@@ -27,23 +29,44 @@ export default function Talk() {
     };
   }, [])
 
-  const user = sessionStorage.getItem("userName")
 
   const sendMessage = () => {
     if (typingText) {
       setsendCount(sendCount + 1)
-      //setPrintedText([...printedText, `${user} : ${typingText}`])
       setTypingText("")
       wsRef.current.send(typingText)
     }
   }
 
+  const handleChnage = (e) => {
+    if (e.target.value.length > 128) return
+    setTypingText(e.target.value)
+  }
+
+  const handleKeyDown = (e) => {
+    switch (e.key) {
+      case "Enter" :
+        if (e.altKey) {
+          if (e.target.value.length > 128) return
+          setTypingText(`${typingText}\n`);
+        } else {
+          e.preventDefault();
+          sendMessage();
+        }
+        break
+      default :
+        break
+    }
+  }
+
   return (
-    <div className="container">
+    <div className={style.container}>
       <textarea
         name="typingText"
         value={typingText}
-        onChange={(e) => { setTypingText(e.target.value) }}
+        onChange={handleChnage}
+        onKeyDown={handleKeyDown}
+        maxLength={128}
       />
       <button onClick={sendMessage}>보내기</button>
       <p>보낸 메시지 횟수 : {sendCount}번</p>
