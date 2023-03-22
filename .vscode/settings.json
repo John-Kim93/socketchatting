@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./py-server/__pypackages__/3.10/lib"
+        "./py-server/__pypackages__/3.10/lib",
+        "./chat-server/__pypackages__/3.10/lib"
     ]
 }
