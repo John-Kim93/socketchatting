@@ -1,4 +1,9 @@
 # socketchatting
+
+## 개요
+
+소켓 통신을 활용한 채팅방 기능 구현
+
 #### 사용 방법
 
 클라이언트 실행 : Client_user/client-user에서 npm start 입력
@@ -25,11 +30,13 @@
 
 #### Protocol
 
+* type rule : ACTOR_DOMAIN_ACTION
+
 1. 방 생성
 
    - send
 
-     - type : ROOM_CREATE(01)
+     - type : CLIENT_ROOM_CREATE
 
      - roomName : string(max length = 30)
 
@@ -37,73 +44,93 @@
 
    - receive
 
+     - type : SERVER_ROOM_CREATE
+
      - status : bool (true = "success" / false = "fail")
+     
      - roomID : number(int)
-     - message : "{userName}님이 참여하였습니다."
+     
+     - roomName : string(max length = 30)
 
 2. 방 삭제
 
    - send
 
-     - type : ROOM_DELETE(02)
+     - type : CLIENT_ROOM_DELETE
 
      - roomID : number(int)
+     
      - userName : string(max length = 10)
 
    - receive
+   
+     - type : SERVER_ROOM_DELETE
 
      - status : bool (true = "success" / false = "fail")
+     
+     - roomID : number(int)
 
 3. 방 참여
 
    - send
 
-     - type : ROOM_JOIN(03)
+     - type : CLIENT_ROOM_JOIN
 
      - roomID : number(int)
 
      - userName : string(max length = 10)
 
    - receive
+   
+     - type : SERVER_ROOM_JOIN
 
      - status : bool (true = "success" / false = "fail")
+     
      - roomID : number(int)
-     - message : "{userName}님이 참여하였습니다."
 
 4. 방 퇴장
 
     - send
 
-      - type : ROOM_EXIT(04)
+      - type : CLIENT_ROOM_EXIT
 
       - roomID : number(int)
 
       - userName : string(max length = 10)
 
     - receive
+    
+      - type : SERVER_ROOM_EXIT
 
       - status : bool (true = "success" / false = "fail")
+      
       - roomID : number(int)
-      - message : "{userName}님이 참여하였습니다."
-
+      
+      - nickName : string(max length = 10)
+      
 5. 채팅 입력
 
     - send
 
-      - type : CHAT_SEND(10)
+      - type : CLIENT_CHAT_SEND
 
       - roomID : number(int)
 
       - userName : string(max length = 10)
+      
       - message : string(max length = 128)
 
     - receive
+    
+      - type : SERVER_CHAT_SEND
 
       - status : bool (true = "success" / false = "fail")
+      
       - roomID : number(int)
+      
       - nickname : string(max length = 10)
+      
       - message : string(max length = 128)
-
 
 
 #### conditions
