@@ -30,7 +30,22 @@
 
 #### Protocol
 
+* send : 클라이언트에서 보내는 메시지 / unicast : 서버에서 unicast로 받은 메시지 / broadcast : 서버에서 broadcast로 받은 메시지
 * type rule : ACTOR_DOMAIN_ACTION
+
+0. 닉네임 설정
+
+   - send
+   
+     - type : CLIENT_NAME_SET
+     
+     - userName : string(max length = 10)
+   
+   - unicast
+   
+     - type : SERVER_NAME_SET
+     
+     - status : bool (true = "success" / false = "fail")
 
 1. 방 생성
 
@@ -40,13 +55,15 @@
 
      - roomName : string(max length = 30)
 
-     - userName : string(max length = 10)
-
-   - receive
+   - unicast
 
      - type : SERVER_ROOM_CREATE
 
      - status : bool (true = "success" / false = "fail")
+     
+   - broadcast
+   
+     - type : BROAD_ROOM_CREATE     
      
      - roomID : number(int)
      
@@ -60,16 +77,18 @@
 
      - roomID : number(int)
      
-     - userName : string(max length = 10)
-
-   - receive
+   - unicast
    
      - type : SERVER_ROOM_DELETE
 
      - status : bool (true = "success" / false = "fail")
      
+   - broadcast
+   
+     - type : BROAD_ROOM_DELETE
+     
      - roomID : number(int)
-
+     
 3. 방 참여
 
    - send
@@ -78,15 +97,17 @@
 
      - roomID : number(int)
 
-     - userName : string(max length = 10)
-
-   - receive
+   - unicast
    
      - type : SERVER_ROOM_JOIN
 
      - status : bool (true = "success" / false = "fail")
      
-     - roomID : number(int)
+   - broadcast
+     
+     - type : BROAD_ROOM_JOIN
+     
+     - nickName : string(max length = 10)
 
 4. 방 퇴장
 
@@ -94,17 +115,15 @@
 
       - type : CLIENT_ROOM_EXIT
 
-      - roomID : number(int)
-
-      - userName : string(max length = 10)
-
-    - receive
+    - unicast
     
       - type : SERVER_ROOM_EXIT
 
       - status : bool (true = "success" / false = "fail")
       
-      - roomID : number(int)
+    - broadcast
+
+      - type : BROAD_ROOM_EXIT
       
       - nickName : string(max length = 10)
       
@@ -114,20 +133,12 @@
 
       - type : CLIENT_CHAT_SEND
 
-      - roomID : number(int)
-
-      - userName : string(max length = 10)
-      
       - message : string(max length = 128)
 
-    - receive
+    - broadcast
     
-      - type : SERVER_CHAT_SEND
+      - type : BROAD_CHAT_SEND
 
-      - status : bool (true = "success" / false = "fail")
-      
-      - roomID : number(int)
-      
       - nickname : string(max length = 10)
       
       - message : string(max length = 128)
@@ -135,6 +146,6 @@
 
 #### conditions
 
-- 방 생성 시 자동 입장(방장)
+- 방 생성 성공 시 자동 입장(방장)
 - 방장이 방 퇴장 시 방 삭제
 - 방 삭제 시 방장인지 확인
