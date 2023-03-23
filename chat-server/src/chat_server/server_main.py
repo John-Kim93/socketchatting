@@ -17,10 +17,9 @@ class ServerMain:
             pass
 
     async def listen(self):
-        server = await websockets.serve(
-            self.on_connect, self.host, self.port)
-        print("Listening.....")
-        await server.serve_forever()
+        server = await websockets.serve(self.on_accept, self.host, self.port)
+        async with server:
+            await server.serve_forever()
 
-    async def on_connect(self, websocket):
+    async def on_accept(self, websocket):
         await self.sess_mgr.generate(websocket)

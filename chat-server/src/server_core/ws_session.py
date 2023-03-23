@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 from websockets.server import WebSocketServerProtocol
-from websockets.exceptions import ConnectionClosed
+from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from collections.abc import Callable, Awaitable
 
 
@@ -20,15 +20,18 @@ class WSSession:
 
             while msg := await self.recv():
                 await self.on_recv_msg(self, msg)
-        except ConnectionClosed:
-            print("connection closed")
+        except ConnectionClosedOK:
+            pass
+        except ConnectionClosedError:
+            pass
         finally:
             await self.websocket.close()
             await self.websocket.wait_closed()
             await self.on_disconnect(self)
 
     async def recv(self) -> dict:
-        return json.loads(await self.websocket.recv())
+        data = await self.websocket.recv()
+        return json.loads(data)
 
     async def send(self, msg: dict):
         await self.websocket.send(json.dumps(msg))
