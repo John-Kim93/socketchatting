@@ -10,7 +10,9 @@
 
 테스트 서버 실행 : node_test_server에서 npm i ws 이후 node WebSocketEchoServer.js 입력
 
-파이썬 서버 실행 : cd py-server 에서 pdm run app.py
+파이썬 서버 실행 : cd chat-server 에서 pdm run server
+
+파이썬 클라 실행 : cd chat-server 에서 pdm run client
 
 
 
