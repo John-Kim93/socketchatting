@@ -84,7 +84,8 @@
      - status : bool (true = "success" / false = "fail")
 
      - roomList : [ { roomID : number(int), roomName : string(max length = 30) }, ... ]
-      * TODO : roomList pagination 최적화
+     
+       (TODO : roomList pagination 최적화)
 
    - broadcast
    
@@ -109,7 +110,8 @@
      - roomID : number(int)
 
      - roomName : string(max length = 30)
-      * TODO : userList
+     
+       ( TODO : userList )
      
    - broadcast (~님이 입장하셨습니다.)
      
