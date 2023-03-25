@@ -83,7 +83,7 @@
 
      - status : bool (true = "success" / false = "fail")
 
-     - roomList : [ { roomID : number(int), roomName : string(max length = 30) }, ... ]
+     - roomList : [ { roomID : number(int), roomName : string(max length = 30), host : string(max length = 10) }, ... ]
      
        (TODO : roomList pagination 최적화)
 
@@ -91,7 +91,7 @@
    
      - type : BROAD_ROOM_GET
      
-     - roomList : [ { roomID : number(int), roomName : string(max length = 30) }, ... ]
+     - roomList : [ { roomID : number(int), roomName : string(max length = 30), host : string(max length = 10) }, ... ]
      
 3. 방 참여
 
