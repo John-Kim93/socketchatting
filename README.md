@@ -71,25 +71,26 @@
      
      - roomName : string(max length = 30)
 
-2. 방 삭제
+2. 방 조회
 
    - send
 
-     - type : CLIENT_ROOM_DELETE
+     - type : CLIENT_ROOM_GET
 
-     - roomID : number(int)
-     
    - unicast
    
-     - type : SERVER_ROOM_DELETE
+     - type : SERVER_ROOM_GET
 
      - status : bool (true = "success" / false = "fail")
-     
+
+     - roomList : [ { roomID : number(int), roomName : string(max length = 30) }, ... ]
+      * TODO : roomList pagination 최적화
+
    - broadcast
    
-     - type : BROAD_ROOM_DELETE
+     - type : BROAD_ROOM_GET
      
-     - roomID : number(int)
+     - roomList : [ { roomID : number(int), roomName : string(max length = 30) }, ... ]
      
 3. 방 참여
 
@@ -104,8 +105,13 @@
      - type : SERVER_ROOM_JOIN
 
      - status : bool (true = "success" / false = "fail")
+
+     - roomID : number(int)
+
+     - roomName : string(max length = 30)
+      * TODO : userList
      
-   - broadcast
+   - broadcast (~님이 입장하셨습니다.)
      
      - type : BROAD_ROOM_JOIN
      
@@ -128,6 +134,8 @@
       - type : BROAD_ROOM_EXIT
       
       - nickName : string(max length = 10)
+
+      - isHost : bool
       
 5. 채팅 입력
 
