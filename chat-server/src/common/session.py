@@ -20,16 +20,23 @@ class Session:
     user_name: str = field(init=False, default=None)
     future: asyncio.Future = field(init=False, default=None)
     websocket: WebSocketServerProtocol | WebSocketClientProtocol
+    handler: SessionHandler = field(init=False, default=None)
+    room_id: int = field(init=False, default=None)
+
+    def set_recv_handler(self, handler):
+        self.handler['on_recv_msg'] = handler
 
     async def start(self, handler: SessionHandler) -> None:
+        self.handler = handler
         try:
-            asyncio.create_task(handler['on_connect'](self))
+            asyncio.create_task(self.handler['on_connect'](self))
             while msg := await self.recv_msg():
-                await handler['on_recv_msg'](self, msg)
+                await self.handler['on_recv_msg'](self, msg)
         except ConnectionClosed:
             print("Remote disconnected")
         finally:
-            await handler['on_disconnect'](self)
+            await self.handler['on_disconnect'](self)
+
 
     async def recv_msg(self) -> dict:
         return json.loads(await self.websocket.recv())
