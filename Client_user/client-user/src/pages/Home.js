@@ -10,7 +10,7 @@ export default function Home() {
   const enterName = () => {
     if (userName) {
       sessionStorage.setItem('userName', userName)
-      navigate("/talk")
+      navigate("/lobby")
     } else {
       setWarning(true)
     }
