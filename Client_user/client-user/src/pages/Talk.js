@@ -27,7 +27,7 @@ export default function Talk() {
       console.log("web socket 연결 끝!!!")
       wsRef.current.close()
     };
-  }, [])
+  }, [user])
 
 
   const sendMessage = () => {

@@ -1,0 +1,62 @@
+.hover_wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+}
+
+.hover_wrap .effect {
+  position: relative;
+  width: 250px; height: 300px; margin: 10px;
+}
+
+.hover_wrap .effect img {
+  width: 100%; display: block;
+}
+
+.hover_wrap .effect .front {
+  position: absolute; z-index: 10;
+  width: 100%;
+}
+.hover_wrap .effect .back {
+  position: absolute;
+  width: 100%;
+}
+
+.hover_wrap .effect figcaption {
+  position: absolute;
+  width: 250px; height: 300px;;
+  padding: 3% 4%;
+  box-sizing: border-box;
+  background: #293740;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px rgb(0,0,0,0.5);
+}
+
+.hover_wrap .effect figcaption h3 {
+  font-size: 24px; padding-bottom: 5px; margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.hover_wrap .effect figcaption p {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+/* hover effect 1 */
+.hover_wrap .effect .front {
+  transform: rotatey(0deg);
+  transition: all 1s;
+  backface-visibility: hidden;
+}
+.hover_wrap .effect:hover .front {
+  transform: rotatey(180deg);
+}
+.hover_wrap .effect .back {
+  transform: rotatey(-180deg);
+  transition: all 1s;
+}
+.hover_wrap .effect:hover .back {
+  transform: rotatey(0deg);
+}
