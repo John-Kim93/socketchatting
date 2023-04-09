@@ -1,22 +1,38 @@
-const ws = new WebSocket(String(process.env.REACT_APP_WS_HOST));
+const websocket = new WebSocket(String(process.env.REACT_APP_WS_HOST));
 
-ws.onopen = () => {
-    console.log("WS connection sucess");
-};
+export default websocket
 
-export const send = (data) => {
-    const isValid = send_data_protocol(data)
-    if (isValid) {
-      ws.send(data)
-    }
+export const useWebsocket = () => {
+  websocket.onopen = () => {
+    console.log("WS Connexion start");
+  };
+  
+  websocket.onclose = () => {
+    console.log("WS Connexion closed");
+  };
+
+  websocket.onmessage = () => {
+    console.log("Ready to listen messages from server")
+  }
+
+  return null;
 }
 
-function send_data_protocol(data) :boolean{
+export const send = (data) => {
+  const isValid = send_data_protocol(data)
+  if (isValid) {
+    websocket.send(JSON.stringify(data))
+    return true
+  }
+  return false
+}
+
+function send_data_protocol(data){
   let result = false
   switch(data.type){
     case 'CLIENT_NAME_SET':
       if (Object.keys(data).toString === ['type', 'userName'].toString
-        && typeof(data.userName) === "string") {
+      && typeof(data.userName) === "string") {
         result = true
       } else {
         invalid_key_found()
@@ -36,8 +52,8 @@ function send_data_protocol(data) :boolean{
       }
       break
     case 'CLIENT_ROOM_JOIN':
-      if (Object.keys(data).toString === ['type', 'roomID'].toString
-        && typeof(data.roomID) === "number") {
+      if (Object.keys(data).toString === ['type', 'roomId'].toString
+        && typeof(data.roomId) === "number") {
         result = true
       } else {
         invalid_key_found()
@@ -49,7 +65,7 @@ function send_data_protocol(data) :boolean{
       } else {
         invalid_key_found()
       }
-    break
+      break
     case 'CLIENT_CHAT_SEND':
       if (Object.keys(data).toString === ['type', 'message'].toString
         && typeof(data.message) === "string") {
@@ -67,5 +83,3 @@ function send_data_protocol(data) :boolean{
 const invalid_key_found = () => {
   console.log("Invalid key is in data")
 }
-
-export default ws;

@@ -1,41 +1,29 @@
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import style from "./Talk.module.css"
+import websocket, { send } from "../hooks/websocket.js"
+import { useEffect } from "react"
 
 export default function Talk() {
   const [sendCount, setsendCount] = useState(0)
   const [typingText, setTypingText] = useState("")
   const [printedText, setPrintedText] = useState([])
 
-  const user = sessionStorage.getItem("userName")
-  const wsRef = useRef(null);
-
   useEffect(() => {
-    wsRef.current = new WebSocket("ws://localhost:8100")
-
-    wsRef.current.onopen = () => {
-      wsRef.current.send(user)
-      console.log("web socket 연결!!!")
-    };
-
-    wsRef.current.onmessage = ({ data }) => {
+    websocket.onmessage = ({ data }) => {
       const msg = JSON.parse(data)
-      setPrintedText(prevPrintedText =>
-        [...prevPrintedText, `${msg.nickname}: ${msg.chat}`])
-    };
-
-    return () => {
-      console.log("web socket 연결 끝!!!")
-      wsRef.current.close()
-    };
-  }, [user])
-
+      if (msg.type === "BROAD_CHAT_SEND") {
+        setPrintedText(prevPrintedText =>
+          [...prevPrintedText, `${msg.nickName}: ${msg.message}`])
+      }
+    } 
+  }, [])
 
   const sendMessage = () => {
-    if (typingText) {
-      setsendCount(sendCount + 1)
-      setTypingText("")
-      wsRef.current.send(typingText)
-    }
+    send({
+      type : "CLIENT_CHAT_SEND",
+      message : typingText
+    });
+    setsendCount(sendCount + 1)
   }
 
   const handleChnage = (e) => {
@@ -51,7 +39,7 @@ export default function Talk() {
           setTypingText(`${typingText}\n`);
         } else {
           e.preventDefault();
-          sendMessage();
+          sendMessage()
         }
         break
       default :
