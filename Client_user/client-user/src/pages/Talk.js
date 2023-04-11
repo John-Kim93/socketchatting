@@ -35,6 +35,7 @@ export default function Talk() {
       type : "CLIENT_CHAT_SEND",
       message : typingText
     });
+    setTypingText("")
     setsendCount(sendCount + 1)
   }
 
