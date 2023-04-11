@@ -20,17 +20,18 @@ export default function Lobby() {
     })
     websocket.onmessage = ({ data }) => {
       const res = JSON.parse(data)
-      console.log(res, "받아온 서버 데이터")
       if (res?.status) {
         switch (res.type) {
-          case "SERVER_ROOM_GET":
+          case "BROAD_ROOM_GET":
             setRoomList(res.roomList)
             break
           case "SERVER_ROOM_CREATE":
-            navigate(`/talk/${res.roomID}`)
+            // navigate(`/talk/${res.roomID}`, {state: { roomID: res.roomID }})
+            navigate(`/talk/${1}`, {state: { roomID: res.roomID }})
             break
           case "SERVER_ROOM_JOIN":
-            navigate(`/talk/${res.roomID}`)
+            // navigate(`/talk/${res.roomID}`, {state: { roomID: res.roomID }})
+            navigate(`/talk/${1}`, {state: { roomID: res.roomID }})
             break
           default:
             break

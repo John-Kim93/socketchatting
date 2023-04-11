@@ -2,7 +2,7 @@ import { useState } from "react"
 import style from "./Talk.module.css"
 import websocket, { send } from "../hooks/websocket.js"
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation  } from "react-router-dom";
 
 
 export default function Talk() {
@@ -11,18 +11,21 @@ export default function Talk() {
   const [printedText, setPrintedText] = useState([])
 
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const userName = sessionStorage.getItem('userName')
 
   useEffect(() => {
     websocket.onmessage = ({ data }) => {
       const msg = JSON.parse(data)
       if (msg.type === "BROAD_CHAT_SEND") {
         setPrintedText(prevPrintedText =>
-          [...prevPrintedText, `${msg.nickName}: ${msg.message}`])
+          [...prevPrintedText, {nickName: msg.nickName, message: msg.message, exit: false}])
       } else if (msg.type === "SERVER_ROOM_EXIT" && msg.status) {
         navigate("/lobby")
       } else if (msg.type === "BROAD_ROOM_EXIT") {
         setPrintedText(prevPrintedText =>
-          [...prevPrintedText, `${msg.nickName}님이 퇴장하셨습니다.`])
+          [...prevPrintedText, {nickName: msg.nickName, message: '님이 퇴장하셨습니다.', exit: true}])
       }
     } 
   }, [navigate])
@@ -56,11 +59,12 @@ export default function Talk() {
     }
   }
 
-  const exitRoom = () => {
-    send({
-      type : "CLIENT_ROOM_EXIT",
-    });
-  }
+  // const exitRoom = () => {
+  //   send({
+  //     type : "CLIENT_ROOM_EXIT",
+  //     roomId : location.state.roomID,
+  //   });
+  // }
 
   return (
     <div className={style.container}>
@@ -72,9 +76,21 @@ export default function Talk() {
         maxLength={128}
       />
       <button onClick={sendMessage} style={{"backgroundColor":"#6BBE92"}}>보내기</button>
-      <button onClick={exitRoom} style={{"backgroundColor":"#ff0000"}}>방탈출</button>
+      {/* <button onClick={exitRoom} style={{"backgroundColor":"#ff0000"}}>방탈출</button> */}
       <p>보낸 메시지 횟수 : {sendCount}번</p>
-      {printedText.map((message, idx) => <div className="message" key={idx}>{message}</div>)}
+      {printedText.map((msgData, idx) => {
+        return (
+          <>
+            {msgData.nickName === userName
+            ? <div className={style.myMsg} key={idx}>{msgData.nickName}<br/>{msgData.message}</div>
+            : <>{msgData.exit
+                ? <div className={style.yourMsg} key={idx}>{msgData.nickName}{msgData.message}</div>
+                : <div className={style.yourMsg} key={idx}>{msgData.nickName}<br/>{msgData.message}</div>
+            }</>
+            }
+          </>
+        )}
+      )}
     </div>
   )
 }
