@@ -20,17 +20,18 @@ export default function Lobby() {
     })
     websocket.onmessage = ({ data }) => {
       const res = JSON.parse(data)
-      console.log(res, "받아온 서버 데이터")
       if (res?.status) {
         switch (res.type) {
-          case "SERVER_ROOM_GET":
+          case "BROAD_ROOM_GET":
             setRoomList(res.roomList)
             break
           case "SERVER_ROOM_CREATE":
-            navigate(`/talk/${res.roomID}`)
+            // navigate(`/talk/${res.roomID}`, {state: { roomID: res.roomID }})
+            navigate(`/talk/${1}`, {state: { roomID: res.roomID }})
             break
           case "SERVER_ROOM_JOIN":
-            navigate(`/talk/${res.roomID}`)
+            // navigate(`/talk/${res.roomID}`, {state: { roomID: res.roomID }})
+            navigate(`/talk/${1}`, {state: { roomID: res.roomID }})
             break
           default:
             break
@@ -61,6 +62,7 @@ export default function Lobby() {
   return (
     <>
       <input
+        className={style.input}
         name="roomName"
         value={roomName}
         onChange={(e) => {
@@ -69,7 +71,7 @@ export default function Lobby() {
         }}
         placeholder="방 제목을 입력하세요."
         maxLength={30}></input>
-      <button onClick={createRoom}>방 만들기</button>
+      <button onClick={createRoom} className={style.button}>방 만들기</button>
       <div className={style.container}>
         <div className={style.warningMessage}>{warning}</div>
         {roomList.map((room) => {

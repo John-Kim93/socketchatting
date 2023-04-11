@@ -6,7 +6,6 @@
 }
 
 .container button {
-  background-color: #6BBE92;
   width: 300px;
   border: 0;
   padding: 10px 0;
@@ -31,8 +30,19 @@
 .container p {
   color: #fff;
 }
-
-.message {
+.msgContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+.myMsg {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  width: 100%;
+  margin-bottom: 2px;
+  text-align: right;
+}
+.yourMsg {
   display: block;
   color: #fff;
   font-size: 14px;
