@@ -61,6 +61,7 @@ export default function Lobby() {
   return (
     <>
       <input
+        className={style.input}
         name="roomName"
         value={roomName}
         onChange={(e) => {
@@ -69,7 +70,7 @@ export default function Lobby() {
         }}
         placeholder="방 제목을 입력하세요."
         maxLength={30}></input>
-      <button onClick={createRoom}>방 만들기</button>
+      <button onClick={createRoom} className={style.button}>방 만들기</button>
       <div className={style.container}>
         <div className={style.warningMessage}>{warning}</div>
         {roomList.map((room) => {
