@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from .chatting_room import ChattingRoom
 from ..common import Session
 
+
 @dataclass
 class RoomManager:
     last_id: int = 0
@@ -24,6 +25,8 @@ class RoomManager:
     def exit_room(self, session: Session):
         room = self.rooms[session.room_id]
         room.exit_room(session)
+        if self.is_host(session):
+            del self.rooms[session.room_id]
         session.room_id = None
 
     def is_host(self, session: Session):
@@ -33,7 +36,8 @@ class RoomManager:
     def get_room_list(self):
         room_list = []
         for r in self.rooms.values():
-            room_list.append({"room_id": r.room_id, "room_name": r.room_name, "host": r.host_name})
+            room_list.append(
+                {"room_id": r.room_id, "room_name": r.room_name, "host": r.host_name})
         return room_list
 
     async def broadcast(self, room_id: int, msg: dict):

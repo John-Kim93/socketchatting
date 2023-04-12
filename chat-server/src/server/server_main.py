@@ -34,7 +34,8 @@ class ServerMain:
         pass
 
     async def on_disconnect(self, session: Session):
-        pass
+        if session.room_id:
+            self.room_mgr.exit_room(session)
 
     async def on_recv_msg(self, session: Session, msg: dict):
         if msg["type"] == "CLIENT_NAME_SET":
@@ -57,7 +58,8 @@ class ServerMain:
     async def on_recv_client_room_create(self, session: Session, msg: dict):
         room_id = self.room_mgr.create_room(msg["roomName"], session.user_name)
         self.room_mgr.join_room(room_id, session)
-        await session.send_msg({"type": "SERVER_ROOM_CREATE", "status": True})
+        await session.send_msg({"type": "SERVER_ROOM_CREATE",
+                                "status": True, "roomId": room_id})
         await self.braodcast({
             "type": "BROAD_ROOM_CREATE",
             "roomId": room_id, "roomName": msg["roomName"]
@@ -71,11 +73,13 @@ class ServerMain:
         })
 
     async def on_recv_client_room_exit(self, session: Session, msg: dict):
+        is_host = self.room_mgr.is_host(session)
         self.room_mgr.exit_room(session)
         await session.send_msg({"type": "SERVER_ROOM_EXIT", "status": True})
         await self.room_mgr.broadcast(msg["roomId"], {
-            "type": "BROAD_ROOM_EXIT", "nickName": session.user_name,
-            "isHost": self.room_mgr.is_host(session)
+            "type": "BROAD_ROOM_EXIT",
+            "nickName": session.user_name,
+            "isHost": is_host
         })
 
     async def on_recv_client_chat_send(self, session: Session, msg: dict):
@@ -83,7 +87,6 @@ class ServerMain:
             "type": "BROAD_CHAT_SEND", "nickName": session.user_name,
             "message": msg["message"]
         })
-
 
     async def send_server_name_set(self, session: Session):
         await session.send_msg({"type": "SERVER_NAME_SET", "status": True})
@@ -94,4 +97,3 @@ class ServerMain:
 
     async def braodcast(self, msg: dict):
         await asyncio.gather(*[s.send_msg(msg) for s in self.sessions if not s.room_id])
-
