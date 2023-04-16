@@ -22,16 +22,15 @@ export default function Lobby() {
       const res = JSON.parse(data)
       if (res?.status) {
         switch (res.type) {
-          case "BROAD_ROOM_GET":
+          case "SERVER_ROOM_GET":
             setRoomList(res.roomList)
             break
           case "SERVER_ROOM_CREATE":
-            // navigate(`/talk/${res.roomID}`, {state: { roomID: res.roomID }})
-            navigate(`/talk/${1}`, {state: { roomID: res.roomID }})
+            navigate(`/talk/${res.roomId}`, {state: { roomID: res.roomId }})
             break
           case "SERVER_ROOM_JOIN":
-            // navigate(`/talk/${res.roomID}`, {state: { roomID: res.roomID }})
-            navigate(`/talk/${1}`, {state: { roomID: res.roomID }})
+            console.log('test', res)
+            navigate(`/talk/${res.roomId}`, {state: { roomID: res.roomId }})
             break
           default:
             break
