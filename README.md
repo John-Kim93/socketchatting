@@ -77,9 +77,9 @@
 
      - type : CLIENT_ROOM_GET
 
-   - broadcast
+   - unicast
    
-     - type : BROAD_ROOM_GET
+     - type : SERVER_ROOM_GET
      
      - roomList : [ { roomID : number(int), roomName : string(max length = 30), host : string(max length = 10) }, ... ]
      
@@ -151,12 +151,9 @@
 
 #### TODO
 
-- SERVER_ROOM_GET 삭제(완) / BROAD_ROOM_GET 응답 로비로 보내기
-- SERVER_ROOM_CREATE 응답 시 roomID 값 필요
+- BROAD_ROOM_GET 삭제(완료)
+- SERVER_ROOM_CREATE 응답 시 roomID 값 필요(완료)
 - BROAD_ROOM_CREATE 응답 로비로 보내기
-- on_recv_client_room_exit의 is_host 얻는 로직 수정
+- on_recv_client_room_exit의 is_host 얻는 로직 수정(완료)
   - exit_room과정에서 session의 roomId를 삭제하여 self.rooms[session.room_id]에서 키 에러 발생
-
-
-
-
+- ROOM_JOIN 응답 값에 roomId 필요 
