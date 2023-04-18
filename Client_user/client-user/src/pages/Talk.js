@@ -3,6 +3,7 @@ import style from "./Talk.module.css"
 import websocket, { send } from "../hooks/websocket.js"
 import { useEffect } from "react"
 import { useNavigate, useLocation  } from "react-router-dom";
+import { useRef } from "react";
 
 
 export default function Talk() {
@@ -31,6 +32,7 @@ export default function Talk() {
   }, [navigate])
 
   const sendMessage = () => {
+    if (typingText === "") return
     send({
       type : "CLIENT_CHAT_SEND",
       message : typingText
@@ -67,6 +69,12 @@ export default function Talk() {
   //   });
   // }
 
+  const chatBoxRef = useRef(null)
+
+  useEffect(() => {
+    chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+  }, [printedText]);
+
   return (
     <div className={style.container}>
       <textarea
@@ -79,19 +87,21 @@ export default function Talk() {
       <button onClick={sendMessage} style={{"backgroundColor":"#6BBE92"}}>보내기</button>
       {/* <button onClick={exitRoom} style={{"backgroundColor":"#ff0000"}}>방탈출</button> */}
       <p>보낸 메시지 횟수 : {sendCount}번</p>
-      {printedText.map((msgData, idx) => {
-        return (
-          <>
-            {msgData.nickName === userName
-            ? <div className={style.myMsg} key={idx}>{msgData.nickName}<br/>{msgData.message}</div>
-            : <>{msgData.exit
-                ? <div className={style.yourMsg} key={idx}>{msgData.nickName}{msgData.message}</div>
-                : <div className={style.yourMsg} key={idx}>{msgData.nickName}<br/>{msgData.message}</div>
-            }</>
-            }
-          </>
+      <div ref={chatBoxRef} className={style.textContainer}>
+        {printedText.map((msgData, idx) => {
+          return (
+            <>
+              {msgData.nickName === userName
+              ? <div className={style.myMsg} key={idx}>{msgData.nickName}<br/>{msgData.message}</div>
+              : <>{msgData.exit
+                  ? <div className={style.yourMsg} key={idx}>{msgData.nickName}{msgData.message}</div>
+                  : <div className={style.yourMsg} key={idx}>{msgData.nickName}<br/>{msgData.message}</div>
+              }</>
+              }
+            </>
+          )}
         )}
-      )}
+      </div>
     </div>
   )
 }
